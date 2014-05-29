@@ -1,111 +1,160 @@
+// SET UP GLOBAL DISPLAY PARAMETERS
+var GRID_SIZE = 25;
+var HORIZONTAL_BOXES = 15;
+var VERTICAL_BOXES = 15;
+var RUN_PROFILER = false;
+var REVEAL_LETTERS = 0;
+
+var GRID_WIDTH = GRID_SIZE * HORIZONTAL_BOXES;
+var GRID_HEIGHT = GRID_SIZE * VERTICAL_BOXES;
+
+// UPDATE FUNCTIONS FOR THE GLOBAL DISPLAY SETTINGS
+function updateBoxSize(numPixels){
+    GRID_SIZE = numPixels;
+    GRID_WIDTH = GRID_SIZE * HORIZONTAL_BOXES;
+    GRID_HEIGHT = GRID_SIZE * VERTICAL_BOXES;
+}
+
+function updateGridSize(horizontal,vertical){
+    if (horizontal > 0) HORIZONTAL_BOXES = horizontal;
+    if (vertical > 0) VERTICAL_BOXES = vertical;
+    
+    GRID_WIDTH = GRID_SIZE * HORIZONTAL_BOXES;
+    GRID_HEIGHT = GRID_SIZE * VERTICAL_BOXES;
+}
+
+function btnAddWords_click(){
 
 
-        function btnAddWords_click(){
+    $('.loading').show();
+    //  MAKES SURE THE LOADING ANIMATION RUNS 
+    //  FOR A SECOND TO SHOW ACTIVITY
+    setTimeout(run,1000);
+}
 
-            wordSearch.Reset();
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            contextAnswers.clearRect(0, 0, 
-                canvasAnswers.width, canvasAnswers.height);
+function DrawGrid(){
+    for (var i = GRID_SIZE; i < GRID_WIDTH; i+=GRID_SIZE){
+        context.moveTo(i,0);
+        context.lineTo(i,GRID_HEIGHT);
+        context.stroke();
+
+        contextAnswers.moveTo(i,0);
+        contextAnswers.lineTo(i,GRID_HEIGHT);
+        contextAnswers.stroke();
+    }
+
+    for (var i = GRID_SIZE; i < GRID_HEIGHT; i+=GRID_SIZE){
+        context.moveTo(0,i);
+        context.lineTo(GRID_WIDTH,i);
+        context.stroke();
+
+        contextAnswers.moveTo(0,i);
+        contextAnswers.lineTo(GRID_WIDTH,i);
+        contextAnswers.stroke();
+    }
+}
+
+function run(){
 
 
-            context.beginPath();
-            context.lineWidth = 1;
-            context.strokeStyle = "black";
+    wordSearch.Reset();
 
-            contextAnswers.beginPath();
-            contextAnswers.lineWidth = 1;
-            contextAnswers.strokeStyle = "black";
+    canvas.width = GRID_WIDTH;
+    canvas.height = GRID_HEIGHT;
+
+    canvasAnswers.width = GRID_WIDTH;
+    canvasAnswers.height = GRID_HEIGHT;
+
+    context.clearRect(0, 0, GRID_WIDTH, GRID_HEIGHT);
+    contextAnswers.clearRect(0, 0, GRID_WIDTH, GRID_HEIGHT);
 
 
-            // DRAW THE GRID
-            for (var i = 25; i < 425; i+=25){
-                context.moveTo(i,0);
-                context.lineTo(i,325);
-                context.stroke();
 
-                contextAnswers.moveTo(i,0);
-                contextAnswers.lineTo(i,325);
-                contextAnswers.stroke();
+    context.beginPath();
+    context.lineWidth = 1;
+    context.strokeStyle = "black";
+
+    contextAnswers.beginPath();
+    contextAnswers.lineWidth = 1;
+    contextAnswers.strokeStyle = "black";
+
+
+    DrawGrid();
+
+    context.font = "20px _sans";
+    context.textBaseline = "middle";
+
+    contextAnswers.font = "20px _sans";
+    contextAnswers.textBaseline = "middle";
+
+    // GENERATE ARRAY OF WORDS TO PUT INTO THE CANVAS
+    var rawData = $('#txtWords').val();
+    var aValues = rawData.split('\n');
+
+    // GET AND DISPLAY THE CROSSWORD - PRINT LETTER IF IT IS
+    // THERE OR PRINT A BLACK SQUARE ON THE CANVAS
+    var crossword = wordSearch.Create(
+    	VERTICAL_BOXES,
+    	HORIZONTAL_BOXES,
+    	aValues);
+    
+
+    for (var i = 0; i < crossword.length; i++){
+        for (var j = 0; j < crossword[i].length; j++){
+            if (crossword[i][j].length == 0){
+                var letter = String.fromCharCode(Math.random() * 26 + 65);
+                var correction = Math.round((GRID_SIZE - context.measureText(letter).width) / 2);
+
+                context.fillText(letter,
+                    i * GRID_SIZE + correction - 0.5,
+                    j * GRID_SIZE + (GRID_SIZE/2));
+
+                contextAnswers.beginPath();
+                contextAnswers.fillStyle = 'rgba(10,10,10,0.4)';
+                contextAnswers.fillText(letter,
+                    i * GRID_SIZE + correction - 0.5,
+                    j * GRID_SIZE + (GRID_SIZE/2));
+                 contextAnswers.closePath();
+            } else {
+                var x = Math.round((GRID_SIZE - 
+                context.measureText(crossword[i][j].toUpperCase()).width) / 2);
+                context.fillText(crossword[i][j].toUpperCase(),
+                  i*GRID_SIZE + x - 0.5, 
+                  j*GRID_SIZE + (GRID_SIZE/2));
+
+                contextAnswers.beginPath();
+                contextAnswers.fillStyle = 'black';
+                contextAnswers.fillText(crossword[i][j].toUpperCase(),
+                  i*GRID_SIZE + x - 0.5, 
+                  j*GRID_SIZE + (GRID_SIZE/2));
+                contextAnswers.closePath();
             }
-
-            for (var i = 25; i < 325; i+=25){
-                context.moveTo(0,i);
-                context.lineTo(425,i);
-                context.stroke();
-
-                contextAnswers.moveTo(0,i);
-                contextAnswers.lineTo(425,i);
-                contextAnswers.stroke();
-            }
-            // END OF DRAWING THE GRID
-
-            context.font = "20px _sans";
-            context.textBaseline = "middle";
-
-            contextAnswers.font = "20px _sans";
-            contextAnswers.textBaseline = "middle";
-
-            // GENERATE ARRAY OF WORDS TO PUT INTO THE CANVAS
-            var rawData = $('#txtWords').val();
-            var aValues = rawData.split('\n');
-
-            // GET AND DISPLAY THE CROSSWORD - PRINT LETTER IF IT IS
-            // THERE OR PRINT A BLACK SQUARE ON THE CANVAS
-            var crossword = wordSearch.Create(13,17,aValues);
-            for (var i = 0; i < crossword.length; i++){
-                for (var j = 0; j < crossword[i].length; j++){
-                    if (crossword[i][j].length == 0){
-                        var letter = String.fromCharCode(Math.random() * 26 + 65);
-                        var correction = Math.round((25 - context.measureText(letter).width) / 2);
-        
-                        context.fillText(letter,
-                            i * 25 + correction - 0.5,
-                            j * 25 + 12.5);
-
-                        contextAnswers.beginPath();
-                        contextAnswers.fillStyle = 'rgba(10,10,10,0.4)';
-                        contextAnswers.fillText(letter,
-                            i * 25 + correction - 0.5,
-                            j * 25 + 12.5);
-                         contextAnswers.closePath();
-                    } else {
-                        var x = Math.round((25 - 
-                        context.measureText(crossword[i][j].toUpperCase()).width) / 2);
-                        context.fillText(crossword[i][j].toUpperCase(),
-                          i*25 + x - 0.5, 
-                          j*25 + 12.5);
-
-                        contextAnswers.beginPath();
-                        contextAnswers.fillStyle = 'black';
-                        contextAnswers.fillText(crossword[i][j].toUpperCase(),
-                          i*25 + x - 0.5, 
-                          j*25 + 12.5);
-                        contextAnswers.closePath();
-                    }
-                }
-            }
-
-            context.stroke();
-            context.closePath();
-
-            contextAnswers.stroke();
-            contextAnswers.closePath();
-
-            var posArray = wordSearch.GetAnswerPositions();
-
-            for (var x=0; x < posArray.length; x++){
-              drawMarker(
-                    contextAnswers,
-                    posArray[x].x1,
-                    posArray[x].y1,
-                    posArray[x].x2,
-                    posArray[x].y2
-              );
-            }
-
-
-            $('#mainContainer').slideDown(500);
         }
+    }
+
+    context.stroke();
+    context.closePath();
+
+    contextAnswers.stroke();
+    contextAnswers.closePath();
+
+    var posArray = wordSearch.GetAnswerPositions();
+
+    for (var x=0; x < posArray.length; x++){
+      drawMarker(
+            contextAnswers,
+            posArray[x].x1,
+            posArray[x].y1,
+            posArray[x].x2,
+            posArray[x].y2
+      );
+    }
+
+	$('.loading').hide();
+    $('#mainContainer').slideDown(500);
+}
+
+
 
 
 function drawMarker(context, x1, y1, x2, y2) {
@@ -117,66 +166,66 @@ function drawMarker(context, x1, y1, x2, y2) {
 
     if ((x1 == x2) && (y1 < y2)) {
         // VERTICAL
-        context.moveTo(x1 * 25, y1 * 25 + 12.5);
-        context.lineTo(x2 * 25, y2 * 25 + 12.5);
+        context.moveTo(x1 * GRID_SIZE, y1 * GRID_SIZE + (GRID_SIZE/2));
+        context.lineTo(x2 * GRID_SIZE, y2 * GRID_SIZE + (GRID_SIZE/2));
 
-        context.moveTo((x1 + 1) * 25, y1 * 25 + 12.5);
-        context.lineTo((x2 + 1) * 25, y2 * 25 + 12.5);
+        context.moveTo((x1 + 1) * GRID_SIZE, y1 * GRID_SIZE + (GRID_SIZE/2));
+        context.lineTo((x2 + 1) * GRID_SIZE, y2 * GRID_SIZE + (GRID_SIZE/2));
 
-        context.moveTo(x1 * 25, y1 * 25 + 12.5);
+        context.moveTo(x1 * GRID_SIZE, y1 * GRID_SIZE + (GRID_SIZE/2));
 
-        context.arc(x1 * 25 + 12.5,
-        y1 * 25 + 12.5,
-        12.5,
+        context.arc(x1 * GRID_SIZE + (GRID_SIZE/2),
+        y1 * GRID_SIZE + (GRID_SIZE/2),
+        (GRID_SIZE/2),
         3.14,
         6.28,
         false);
 
-        context.arc(x2 * 25 + 12.5,
-        y2 * 25 + 12.5,
-        12.5,
+        context.arc(x2 * GRID_SIZE + (GRID_SIZE/2),
+        y2 * GRID_SIZE + (GRID_SIZE/2),
+        (GRID_SIZE/2),
         6.28,
         3.14,
         false);
 
     } else if ((x1 < x2) && (y1 == y2)) {
         // HORIZONTAL
-        context.moveTo(x1 * 25 + 12.5, y1 * 25);
-        context.lineTo(x2 * 25 + 12.5, y2 * 25);
+        context.moveTo(x1 * GRID_SIZE + (GRID_SIZE/2), y1 * GRID_SIZE);
+        context.lineTo(x2 * GRID_SIZE + (GRID_SIZE/2), y2 * GRID_SIZE);
 
-        context.moveTo(x1 * 25 + 12.5, (y1 + 1) * 25);
-        context.lineTo(x2 * 25 + 12.5, (y2 + 1) * 25);
+        context.moveTo(x1 * GRID_SIZE + (GRID_SIZE/2), (y1 + 1) * GRID_SIZE);
+        context.lineTo(x2 * GRID_SIZE + (GRID_SIZE/2), (y2 + 1) * GRID_SIZE);
 
-        context.arc(x1 * 25 + 12.5,
-        y1 * 25 + 12.5,
-        12.5,
+        context.arc(x1 * GRID_SIZE + (GRID_SIZE/2),
+        y1 * GRID_SIZE + (GRID_SIZE/2),
+        (GRID_SIZE/2),
         1.57,
         4.71,
         false);
-        context.arc(x2 * 25 + 12.5,
-        y2 * 25 + 12.5,
-        12.5,
+        context.arc(x2 * GRID_SIZE + (GRID_SIZE/2),
+        y2 * GRID_SIZE + (GRID_SIZE/2),
+        (GRID_SIZE/2),
         4.71,
         1.57,
         false);
     } else if ((x1 < x2) && (y1 < y2)) {
         // DIAGONAL DOWN
 
-        context.moveTo(x1 * 25 + 12.5, y1 * 25);
-        context.lineTo((x2 + 1) * 25, y2 * 25 + 12.5);
+        context.moveTo(x1 * GRID_SIZE + (GRID_SIZE/2), y1 * GRID_SIZE);
+        context.lineTo((x2 + 1) * GRID_SIZE, y2 * GRID_SIZE + (GRID_SIZE/2));
 
-        context.moveTo(x1 * 25, y1 * 25 + 12.5);
-        context.lineTo(x2 * 25 + 12.5, (y2 + 1) * 25);
+        context.moveTo(x1 * GRID_SIZE, y1 * GRID_SIZE + (GRID_SIZE/2));
+        context.lineTo(x2 * GRID_SIZE + (GRID_SIZE/2), (y2 + 1) * GRID_SIZE);
 
-        context.arc((x1 * 25) + (12.5 / 2), (y1 * 25) + (12.5 / 2),
-        Math.sqrt((12.5 * 12.5) + (12.5 * 12.5)) / 2,
+        context.arc((x1 * GRID_SIZE) + ((GRID_SIZE/2) / 2), (y1 * GRID_SIZE) + ((GRID_SIZE/2) / 2),
+        Math.sqrt(((GRID_SIZE/2) * (GRID_SIZE/2)) + ((GRID_SIZE/2) * (GRID_SIZE/2))) / 2,
         2.35,
         5.49,
         false);
 
         context.arc(
-        ((x2 + 1) * 25) - (12.5 / 2), ((y2 + 1) * 25) - (12.5 / 2),
-        Math.sqrt((12.5 * 12.5) + (12.5 * 12.5)) / 2,
+        ((x2 + 1) * GRID_SIZE) - ((GRID_SIZE/2) / 2), ((y2 + 1) * GRID_SIZE) - ((GRID_SIZE/2) / 2),
+        Math.sqrt(((GRID_SIZE/2) * (GRID_SIZE/2)) + ((GRID_SIZE/2) * (GRID_SIZE/2))) / 2,
         5.49,
         2.35,
         false);
@@ -184,24 +233,24 @@ function drawMarker(context, x1, y1, x2, y2) {
     } else if ((x1 < x2) && (y1 > y2)) {
         // DIAGONAL UP
 
-        context.moveTo(x1 * 25, y1 * 25 + 12.5);
-        context.lineTo(x2 * 25 + 12.5, y2 * 25);
+        context.moveTo(x1 * GRID_SIZE, y1 * GRID_SIZE + (GRID_SIZE/2));
+        context.lineTo(x2 * GRID_SIZE + (GRID_SIZE/2), y2 * GRID_SIZE);
 
-        context.moveTo(x1 * 25 + 12.5, (y1+1) * 25);
-        context.lineTo((x2+1) * 25, y2 * 25 + 12.5);
+        context.moveTo(x1 * GRID_SIZE + (GRID_SIZE/2), (y1+1) * GRID_SIZE);
+        context.lineTo((x2+1) * GRID_SIZE, y2 * GRID_SIZE + (GRID_SIZE/2));
 
 
-        context.arc((x1 * 25) + (12.5 / 2), (y1 * 25 + 12.5) + (12.5 / 2),
-        Math.sqrt((12.5 * 12.5) + (12.5 * 12.5)) / 2,
+        context.arc((x1 * GRID_SIZE) + ((GRID_SIZE/2) / 2), (y1 * GRID_SIZE + (GRID_SIZE/2)) + ((GRID_SIZE/2) / 2),
+        Math.sqrt(((GRID_SIZE/2) * (GRID_SIZE/2)) + ((GRID_SIZE/2) * (GRID_SIZE/2))) / 2,
         0.78,
         3.92,
         false);
 
-        context.moveTo(x2 * 25 + 12.5,y2 * 25);
+        context.moveTo(x2 * GRID_SIZE + (GRID_SIZE/2),y2 * GRID_SIZE);
 
         context.arc(
-        ((x2 + 1) * 25) - (12.5 / 2), (y2 * 25) + (12.5 / 2),
-        Math.sqrt((12.5 * 12.5) + (12.5 * 12.5)) / 2,
+        ((x2 + 1) * GRID_SIZE) - ((GRID_SIZE/2) / 2), (y2 * GRID_SIZE) + ((GRID_SIZE/2) / 2),
+        Math.sqrt(((GRID_SIZE/2) * (GRID_SIZE/2)) + ((GRID_SIZE/2) * (GRID_SIZE/2))) / 2,
         3.92,
         7.06,
         false);
@@ -210,3 +259,61 @@ function drawMarker(context, x1, y1, x2, y2) {
     context.stroke();
     context.closePath();
 }
+
+
+
+function btnPrint_click()
+{
+    var html="<!DOCTYPE html><html>";
+    html += '<head>';
+
+    html += '<style>';
+    html += ' .sectionContainer { text-align:center;margin-top:20px;}';
+    html += ' img { border:2px solid black; }';
+    html += ' .cluesLeft { float:left; text-align:left; width:190px; }';
+    html += ' .cluesRight { float:right;text-align:left; width:190px; margin:left:30px; }';
+    html += ' .outerClues { width:100%; text-align:center; }';
+    html += ' .innerClues { background-color:blue;width:400px; margin:0px auto; }';
+    html += ' header { text-align:center;  }';
+    html += ' header, .innerClues, .outerClues {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }'
+    html += ' br { clear: both; }';
+    html += ' @media print{ .noprint { display: none !important;}}';
+    html += '</style>';
+    html += '</head><body>';
+    html += '<input class="noprint" type="button" value="print" onclick="window.print();window.focus();" />';
+    html += '<header>';
+
+    if ($('#txtCrosswordTitle').val().trim().length > 0){
+        html += '<h1>' + $('#txtCrosswordTitle').val().trim() + '</h1>';
+    } else {
+        html += '<h1>New wordsearch</h1>';
+    }
+
+    html += '</header></div>';
+
+    if (($("#rdAll").prop("checked"))||
+        ($("#rdQuestion").prop("checked"))){
+
+        html += '<div class="sectionContainer">';
+        html += '<img src="' +
+            canvas.toDataURL('image/png') + '" />';
+        html += '</div>';
+    }
+
+
+    if (($("#rdAll").prop("checked"))||
+        ($("#rdAnswers").prop("checked"))){
+
+        html += '<div class="sectionContainer">';
+        html += '<img src="' +
+            canvasAnswers.toDataURL('image/png') + '" />';
+        html += '</div>';
+        html+="</body></html>";
+    }
+
+    var printWin = window.open('','','scrollbars=1');
+    printWin.document.write(html);
+    printWin.document.close();
+    printWin.focus();
+}
+

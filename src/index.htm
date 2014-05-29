@@ -20,6 +20,12 @@
     <style>
         #mainContainer { display:none; }
         .canvasContainer { margin-bottom:15px; }
+            .sliderText { font-weight: bold;}
+        .sliderText span { font-weight: normal;}
+        .sliderValues { font-weight: bold;}
+        .sliderContainer { margin-bottom:20px;}
+
+        label {font-weight: normal;}
     </style>
   </head>
   <body>
@@ -42,20 +48,87 @@
             </div>
         </div>
 
-
-        <div>
-            <textarea id="txtWords" style="width:100%" rows="10"></textarea>
+        <div class="row">
+            <h2>Controls:</h2>
         </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <textarea id="txtWords" style="width:100%" rows="10"></textarea>
+            </div>
+            <div class="col-sm-6">
+
+                <div class="sliderText">Title (only shows on print)</div>
+                <div class="sliderContainer">
+                    <input type="text" id="txtCrosswordTitle" value="" style="width:100%;" />
+                </div>
+                <div class="sliderText">Square size <span id="sliderValue"></span></div>
+                <div class="sliderContainer">
+                    <div id="slider"></div>
+                </div>
+                <div class="sliderText">Horizontal Squares <span id="hSliderValue"></span></div>
+                <div class="sliderContainer">
+                    <div id="hSlider"></div>
+                </div>
+                <div class="sliderText">Vertical Squares <span id="vSliderValue"></span></div>
+                <div class="sliderContainer">
+                    <div id="vSlider"></div>
+                </div>
 
 
+                <div class="sliderText">Print options</div>
+                <div class="sliderContainer">
+                    <input id="rdAll" type="radio" name="printOptions" value="all" checked="checked" />
+                    <label for="rdAll">Both Grids</label>
+                    &nbsp;&nbsp;&nbsp;
+                    <input id="rdQuestion" type="radio" name="printOptions" value="question" />
+                    <label for="rdQuestion">Question Grid Only</label>
+                    &nbsp;&nbsp;&nbsp;
+                    <input id="rdAnswers" type="radio" name="printOptions" value="answers" />
+                    <label for="rdAnswers">Answer Grid Only</label>
+                </div>
 
-        <div>
-            <input 
+                <div class="sliderText">Direction of text</div>
+                <div class="sliderContainer">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        
+                        <input id="chkH" type="checkbox" value="H" checked="checked" />&nbsp;&nbsp;<label for="chkH">Horizontal</label><br />
+                        <input id="chkV" type="checkbox" value="V" checked="checked" />&nbsp;&nbsp;<label for="chkV">Vertical</label><br />
+                        <input id="chkDD" type="checkbox" value="DD" checked="checked" />&nbsp;&nbsp;<label for="chkDD">Diagonal Down</label><br />
+                        <input id="chkDU" type="checkbox" value="DU" checked="checked" />&nbsp;&nbsp;<label for="chkDU">Diagonal Up</label><br />
+
+                    </div>
+                    <div class="col-sm-6">
+                        <input id="chkRH" type="checkbox" value="RH" />&nbsp;&nbsp;<label for="chkRH">Reverse Horizontal</label><br />
+                        <input id="chkRV" type="checkbox" value="RV" />&nbsp;&nbsp;<label for="chkRV">Reverse Vertical</label><br />
+                        <input id="chkRDD" type="checkbox" value="RDD" />&nbsp;&nbsp;<label for="chkRDD">Reverse Diagonal Down</label><br />
+                        <input id="chkRDU" type="checkbox" value="RDU" />&nbsp;&nbsp;<label for="chkRDU">Reverse Diagonal Up</label><br />
+                        
+                    </div>
+
+
+                </div>
+
+                <input 
                     type="button" 
                     id="btnAddWords" 
                     onclick="btnAddWords_click()"
                     value="Add Words" />
+
+                <input 
+                    type="button" 
+                    id="btnPrint" 
+                    onclick="btnPrint_click()"
+                    value="Open Printable Page" />
+
+            </div>
         </div>
+
+
+
+
+
     </section>
     <footer class="row">
       <small></small>
@@ -63,7 +136,7 @@
     </div><!-- END CONTAINER CLASS -->
 
     <div class="loading" style="display:none;">
-        <img src="img/crosswordTimer.gif" alt="xWords busy indicator" />
+        <img src="img/wordSearchTimer.gif" alt="xWords busy indicator" />
     </div>​
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -85,6 +158,55 @@
 
             canvasAnswers = document.getElementById("myAnswersCanvas");
             contextAnswers = canvasAnswers.getContext("2d");
+
+
+            $( "#slider" ).slider({
+                max:50,
+                min:20,
+                value:25,
+                slide: function( event, ui ) {
+                    $('#sliderValue').html(ui.value);
+                },
+                change: function( event, ui ) {
+                    updateBoxSize(ui.value);
+                }
+            });
+
+
+            $( "#hSlider" ).slider({
+                max:20,
+                min:5,
+                value:12,
+                slide: function( event, ui ) {
+                    $('#hSliderValue').html(ui.value);
+                },
+                change: function( event, ui ) {
+                    updateGridSize(ui.value,-1);
+                }
+            });
+
+            $( "#vSlider" ).slider({
+                max:20,
+                min:5,
+                value:12,
+                slide: function( event, ui ) {
+                    $('#vSliderValue').html(ui.value);
+                },
+                change: function( event, ui ) {
+                    updateGridSize(-1, ui.value);
+                }
+            });
+
+            $('#sliderValue').html(
+                $( "#slider" ).slider( "value" )
+            );
+            $('#vSliderValue').html(
+                $( "#vSlider" ).slider( "value" )
+            );
+            $('#hSliderValue').html(
+                $( "#hSlider" ).slider( "value" )
+            );
+
         }
     </script>
   </body>
