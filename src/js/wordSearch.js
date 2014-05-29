@@ -25,7 +25,7 @@ var wordSearch = {
     _self:this,
 	Grid:new Array(),
 	Words:new Array(),
-
+	Directions:new Array(),
 
 	/* PUBLIC METHODS */
 	// resets the grid and word list
@@ -35,10 +35,13 @@ var wordSearch = {
 	},
 
 
-	Create: function(height, width, arrayOfWords){
+	Create: function(height, width, arrayOfWords, directions){
 
 		// RESET AND CREATE THE NEW GRID
 		this.Reset();
+
+		this.Directions = directions;
+
         var newGrid = new Array(width);
         for (var i = 0; i < newGrid.length; i++){
             newGrid[i] = new Array(height);
@@ -151,38 +154,53 @@ var wordSearch = {
 
 				var newPos = undefined
 				
-				newPos = this.TestPosition(
-					newWord,x,y,this.HORIZONTAL);
-				if (newPos !== undefined) positionArray.push(newPos);
+				if (this.Directions.HORIZONTAL){
+					newPos = this.TestPosition(
+						newWord,x,y,this.HORIZONTAL);
+					if (newPos !== undefined) positionArray.push(newPos);
+				}
 
-				newPos = this.TestPosition(
-					newWord,x,y,this.VERTICAL);
-				if (newPos !== undefined) positionArray.push(newPos);
+				if (this.Directions.VERTICAL){
+					newPos = this.TestPosition(
+						newWord,x,y,this.VERTICAL);
+					if (newPos !== undefined) positionArray.push(newPos);
+				}
 
-				newPos = this.TestPosition(
-					newWord,x,y,this.REVERSE_HORIZONTAL);
-				if (newPos !== undefined) positionArray.push(newPos);
+				if (this.Directions.REVERSE_HORIZONTAL){
+					newPos = this.TestPosition(
+						newWord,x,y,this.REVERSE_HORIZONTAL);
+					if (newPos !== undefined) positionArray.push(newPos);
+				}
 
-				newPos = this.TestPosition(
-					newWord,x,y,this.REVERSE_VERTICAL);
-				if (newPos !== undefined) positionArray.push(newPos);
+				if (this.Directions.REVERSE_VERTICAL){
+					newPos = this.TestPosition(
+						newWord,x,y,this.REVERSE_VERTICAL);
+					if (newPos !== undefined) positionArray.push(newPos);
+				}
 
-				newPos = this.TestPosition(
-					newWord,x,y,this.DIAGONAL_UP);
-				if (newPos !== undefined) positionArray.push(newPos);
+				if (this.Directions.DIAGONAL_UP){
+					newPos = this.TestPosition(
+						newWord,x,y,this.DIAGONAL_UP);
+					if (newPos !== undefined) positionArray.push(newPos);
+				}
 
-				newPos = this.TestPosition(
-					newWord,x,y,this.DIAGONAL_DOWN);
-				if (newPos !== undefined) positionArray.push(newPos);
+				if (this.Directions.DIAGONAL_DOWN){
+					newPos = this.TestPosition(
+						newWord,x,y,this.DIAGONAL_DOWN);
+					if (newPos !== undefined) positionArray.push(newPos);
+				}
 
-				newPos = this.TestPosition(
-					newWord,x,y,this.REVERSE_DIAGONAL_UP);
-				if (newPos !== undefined) positionArray.push(newPos);
+				if (this.Directions.REVERSE_DIAGONAL_UP){
+					newPos = this.TestPosition(
+						newWord,x,y,this.REVERSE_DIAGONAL_UP);
+					if (newPos !== undefined) positionArray.push(newPos);
+				}
 
-				newPos = this.TestPosition(
-					newWord,x,y,this.REVERSE_DIAGONAL_DOWN);
-				if (newPos !== undefined) positionArray.push(newPos);
-
+				if (this.Directions.REVERSE_DIAGONAL_DOWN){
+					newPos = this.TestPosition(
+						newWord,x,y,this.REVERSE_DIAGONAL_DOWN);
+					if (newPos !== undefined) positionArray.push(newPos);
+				}
 			}
 		}
 		return positionArray;

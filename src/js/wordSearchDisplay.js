@@ -1,7 +1,7 @@
 // SET UP GLOBAL DISPLAY PARAMETERS
 var GRID_SIZE = 25;
-var HORIZONTAL_BOXES = 15;
-var VERTICAL_BOXES = 15;
+var HORIZONTAL_BOXES = 12;
+var VERTICAL_BOXES = 12;
 var RUN_PROFILER = false;
 var REVEAL_LETTERS = 0;
 
@@ -93,10 +93,23 @@ function run(){
 
     // GET AND DISPLAY THE CROSSWORD - PRINT LETTER IF IT IS
     // THERE OR PRINT A BLACK SQUARE ON THE CANVAS
+
+    var directions = {
+    	HORIZONTAL: 			$('#chkH').prop('checked'),
+    	VERTICAL: 				$('#chkV').prop('checked'),
+    	DIAGONAL_UP: 			$('#chkDU').prop('checked'),
+    	DIAGONAL_DOWN: 			$('#chkDD').prop('checked'),
+    	REVERSE_HORIZONTAL: 	$('#chkRH').prop('checked'),
+    	REVERSE_VERTICAL: 		$('#chkRV').prop('checked'),
+    	REVERSE_DIAGONAL_UP: 	$('#chkRDU').prop('checked'),
+    	REVERSE_DIAGONAL_DOWN: 	$('#chkRDD').prop('checked')
+    };
+
     var crossword = wordSearch.Create(
     	VERTICAL_BOXES,
     	HORIZONTAL_BOXES,
-    	aValues);
+    	aValues,
+    	directions);
     
 
     for (var i = 0; i < crossword.length; i++){
