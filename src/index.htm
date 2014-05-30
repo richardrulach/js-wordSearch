@@ -31,7 +31,7 @@
   <body>
 
     <div class="container">
-    <header>
+    <header id="pageTop">
       <div class="row">
         <h1>Word Search Demo</h1>
     </div>
@@ -41,6 +41,7 @@
             <div class="canvasContainer col-sm-6">
                 <canvas id="myCanvas" width="425" height="325" style="border:1px solid black;">
                 </canvas>
+                <p>(Right click on images to save locally.)</p>
             </div>
             <div class="canvasContainer col-sm-6">
                 <canvas id="myAnswersCanvas" width="425" height="325" style="border:1px solid black;">
@@ -48,12 +49,18 @@
             </div>
         </div>
 
+
         <div class="row">
             <h2>Controls:</h2>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <textarea id="txtWords" style="width:100%" rows="10"></textarea>
+
+                <div class="sliderText">
+                    Words and Clues:</div>
+                <p>Enter a list of words and clues separated by a comma (','). To see an example <a href="javascript: LoadSampleData();">VIEW SAMPLE DATA</a>.</p>
+
+                <textarea id="txtWords" style="width:100%" rows="18"></textarea>
             </div>
             <div class="col-sm-6">
 
@@ -75,21 +82,6 @@
                 </div>
 
 
-                <div class="sliderText">Print options</div>
-                <div class="sliderContainer">
-                    <input id="rdAll" type="radio" name="printOptions" value="all" checked="checked" />
-                    <label for="rdAll">Both Grids</label>
-                    &nbsp;&nbsp;&nbsp;<br />
-                    <input id="rdQuestion" type="radio" name="printOptions" value="question" />
-                    <label for="rdQuestion">Question Grid Only</label>
-                    &nbsp;&nbsp;&nbsp;<br />
-                    <input id="rdAnswers" type="radio" name="printOptions" value="answers" />
-                    <label for="rdAnswers">Answer Grid Only</label>
-                </div>
-
-                <div class="sliderText">Direction of text</div>
-                <div class="sliderContainer">
-
                 <div class="row">
                     <div class="col-sm-6">
                         
@@ -110,6 +102,24 @@
 
                 </div>
 
+
+
+                <div class="sliderText">Print options</div>
+                <div class="sliderContainer">
+                    <input id="rdAll" type="radio" name="printOptions" value="all" checked="checked" />
+                    <label for="rdAll">Both Grids</label>
+                    &nbsp;&nbsp;&nbsp;<br />
+                    <input id="rdQuestion" type="radio" name="printOptions" value="question" />
+                    <label for="rdQuestion">Question Grid Only</label>
+                    &nbsp;&nbsp;&nbsp;<br />
+                    <input id="rdAnswers" type="radio" name="printOptions" value="answers" />
+                    <label for="rdAnswers">Answer Grid Only</label>
+                </div>
+
+                <div class="sliderText">Direction of text</div>
+                <div class="sliderContainer">
+
+
                 <input 
                     type="button" 
                     id="btnAddWords" 
@@ -122,6 +132,7 @@
                     onclick="btnPrint_click()"
                     value="Open Printable Page" />
 
+                </div>
             </div>
         </div>
 

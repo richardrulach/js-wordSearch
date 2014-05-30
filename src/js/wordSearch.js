@@ -1,4 +1,21 @@
 /**
+ *   Copyright 2014 Richard Rulach 
+ *   Licensed under the Apache License, Version 2.0 (the "License"); 
+ *   you may not use this file except in compliance with the License. 
+ *
+ *   You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ *   Unless required by applicable law or agreed to in writing, 
+ *   software distributed under the License is distributed on 
+ *   an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ *   either express or implied. See the License for the specific 
+ *   language governing permissions and limitations under the License
+**/
+
+
+/**
   * Classes: wordSearch and position
   * File: wordSearch.js 
   *
@@ -20,18 +37,23 @@ var wordSearch = {
    	REVERSE_DIAGONAL_DOWN:7,
    	REVERSE_DIAGONAL_UP:8,
 
+   	MAX_RUNTIME:5000,
+
 
     /* CLASS PROPERTIES */
     _self:this,
 	Grid:new Array(),
 	Words:new Array(),
 	Directions:new Array(),
+	sErrors:'',
 
 	/* PUBLIC METHODS */
 	// resets the grid and word list
 	Reset: function(){
 		this.Grid = new Array();
 		this.Words = new Array();
+		this.Directions = new Array();
+		this.sErrors = '';
 	},
 
 
@@ -478,49 +500,52 @@ function Word(txt){
 			x1:-1,y1:-1,x2:-1,y2:-1,direction:-1
 		};
 
-		// DEFAULT ALL TO STARTING POSTION
-		lPositions.x1 = this.availablePositions[this.posIndex].x;
-		lPositions.y1 = this.availablePositions[this.posIndex].y;
-		lPositions.x2 = this.availablePositions[this.posIndex].x;
-		lPositions.y2 = this.availablePositions[this.posIndex].y;
-		lPositions.direction = this.availablePositions[this.posIndex].direction;
-		
-		// MAKE ADJUSTMENT BASED ON DIRECTION OF TEXT
-		switch (this.availablePositions[this.posIndex].direction){
+		if (this.posIndex >= 0){
 
-			case wordSearch.HORIZONTAL:
-				lPositions.x2 += this.word.length - 1;
-				break;
-		   	case wordSearch.VERTICAL:
-				lPositions.y2 += this.word.length - 1;
-				break;
+			// DEFAULT ALL TO STARTING POSTION
+			lPositions.x1 = this.availablePositions[this.posIndex].x;
+			lPositions.y1 = this.availablePositions[this.posIndex].y;
+			lPositions.x2 = this.availablePositions[this.posIndex].x;
+			lPositions.y2 = this.availablePositions[this.posIndex].y;
+			lPositions.direction = this.availablePositions[this.posIndex].direction;
+			
+			// MAKE ADJUSTMENT BASED ON DIRECTION OF TEXT
+			switch (this.availablePositions[this.posIndex].direction){
 
-		   	case wordSearch.REVERSE_HORIZONTAL:
-				lPositions.x1 = lPositions.x1 - this.word.length + 1;
-				break;
-		   	case wordSearch.REVERSE_VERTICAL:
-				lPositions.y1 = lPositions.y1 - this.word.length + 1;
-				break;
+				case wordSearch.HORIZONTAL:
+					lPositions.x2 += this.word.length - 1;
+					break;
+			   	case wordSearch.VERTICAL:
+					lPositions.y2 += this.word.length - 1;
+					break;
 
-		   	case wordSearch.DIAGONAL_DOWN:
-				lPositions.x2 += this.word.length - 1;
-				lPositions.y2 += this.word.length - 1;
-				break;
-		   	case wordSearch.DIAGONAL_UP:
-				lPositions.x2 += this.word.length - 1;
-				lPositions.y2 = lPositions.y2 - this.word.length + 1;
-				break;
+			   	case wordSearch.REVERSE_HORIZONTAL:
+					lPositions.x1 = lPositions.x1 - this.word.length + 1;
+					break;
+			   	case wordSearch.REVERSE_VERTICAL:
+					lPositions.y1 = lPositions.y1 - this.word.length + 1;
+					break;
 
-		   	case wordSearch.REVERSE_DIAGONAL_DOWN:
-				lPositions.x1 = lPositions.x1 - this.word.length + 1;
-				lPositions.y1 = lPositions.y1 - this.word.length + 1;
-				break;
-		   	case wordSearch.REVERSE_DIAGONAL_UP:		
-				lPositions.x1 = lPositions.x1 - this.word.length + 1;
-				lPositions.y1 += this.word.length - 1;
-				break;
-   		}
-   		return lPositions;
+			   	case wordSearch.DIAGONAL_DOWN:
+					lPositions.x2 += this.word.length - 1;
+					lPositions.y2 += this.word.length - 1;
+					break;
+			   	case wordSearch.DIAGONAL_UP:
+					lPositions.x2 += this.word.length - 1;
+					lPositions.y2 = lPositions.y2 - this.word.length + 1;
+					break;
+
+			   	case wordSearch.REVERSE_DIAGONAL_DOWN:
+					lPositions.x1 = lPositions.x1 - this.word.length + 1;
+					lPositions.y1 = lPositions.y1 - this.word.length + 1;
+					break;
+			   	case wordSearch.REVERSE_DIAGONAL_UP:		
+					lPositions.x1 = lPositions.x1 - this.word.length + 1;
+					lPositions.y1 += this.word.length - 1;
+					break;
+	   		}
+	   		return lPositions;
+	   	}
 	}
 
 }

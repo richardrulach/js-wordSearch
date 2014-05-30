@@ -1,3 +1,19 @@
+/**
+ *   Copyright 2014 Richard Rulach 
+ *   Licensed under the Apache License, Version 2.0 (the "License"); 
+ *   you may not use this file except in compliance with the License. 
+ *
+ *   You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ *   Unless required by applicable law or agreed to in writing, 
+ *   software distributed under the License is distributed on 
+ *   an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ *   either express or implied. See the License for the specific 
+ *   language governing permissions and limitations under the License
+**/
+
 // SET UP GLOBAL DISPLAY PARAMETERS
 var GRID_SIZE = 25;
 var HORIZONTAL_BOXES = 12;
@@ -153,18 +169,26 @@ function run(){
 
     var posArray = wordSearch.GetAnswerPositions();
 
-    for (var x=0; x < posArray.length; x++){
-      drawMarker(
-            contextAnswers,
-            posArray[x].x1,
-            posArray[x].y1,
-            posArray[x].x2,
-            posArray[x].y2
-      );
+    if (posArray[0] !== undefined){
+        for (var x=0; x < posArray.length; x++){
+          drawMarker(
+                contextAnswers,
+                posArray[x].x1,
+                posArray[x].y1,
+                posArray[x].x2,
+                posArray[x].y2
+          );
+        }
     }
 
+
 	$('.loading').hide();
-    $('#mainContainer').slideDown(500);
+    $('#mainContainer').slideDown(250);
+
+    $('html, body').animate({
+        scrollTop: $("#pageTop").offset().top
+    }, 400);
+  
 }
 
 
@@ -274,6 +298,20 @@ function drawMarker(context, x1, y1, x2, y2) {
 }
 
 
+function LoadSampleData(){
+    $('#txtWords').val(
+        'jumper\n' + 
+        'jeans\n' + 
+        'shirt\n' + 
+        'trousers\n' + 
+        'scarf\n' + 
+        'shoes\n' + 
+        'gloves\n' + 
+        'hat\n' + 
+        'socks\n'
+        );
+}
+
 
 function btnPrint_click()
 {
@@ -310,6 +348,12 @@ function btnPrint_click()
         html += '<div class="sectionContainer">';
         html += '<img src="' +
             canvas.toDataURL('image/png') + '" />';
+        html += '</div>';
+        html += '<div class="outerClues">';
+        html += '<h2>Find these words!!!</h2>';
+        html += $('#txtWords').val().replace(/\n/g,'<br />');
+
+        html += '</div>';
         html += '</div>';
     }
 
