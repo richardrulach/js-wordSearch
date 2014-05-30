@@ -169,15 +169,15 @@ function run(){
 
     var posArray = wordSearch.GetAnswerPositions();
 
-    if (posArray[0] !== undefined){
-        for (var x=0; x < posArray.length; x++){
-          drawMarker(
+    for (var x=0; x < posArray.length; x++){
+        if (posArray[x] !== undefined){
+            drawMarker(
                 contextAnswers,
                 posArray[x].x1,
                 posArray[x].y1,
                 posArray[x].x2,
                 posArray[x].y2
-          );
+            );
         }
     }
 
@@ -189,6 +189,9 @@ function run(){
         scrollTop: $("#pageTop").offset().top
     }, 400);
   
+    if (wordSearch.sErrors.length > 0){
+        alert(wordSearch.sErrors);
+    } 
 }
 
 
@@ -342,6 +345,12 @@ function btnPrint_click()
 
     html += '</header></div>';
 
+
+    var addedWords = '';
+    for (var y = 0; y < wordSearch.WordsAdded.length; y++){
+        addedWords += wordSearch.WordsAdded[y] + '<br />';
+    }
+
     if (($("#rdAll").prop("checked"))||
         ($("#rdQuestion").prop("checked"))){
 
@@ -351,7 +360,7 @@ function btnPrint_click()
         html += '</div>';
         html += '<div class="outerClues">';
         html += '<h2>Find these words!!!</h2>';
-        html += $('#txtWords').val().replace(/\n/g,'<br />');
+        html += addedWords;
 
         html += '</div>';
         html += '</div>';

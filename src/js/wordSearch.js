@@ -45,6 +45,7 @@ var wordSearch = {
 	Grid:new Array(),
 	Words:new Array(),
 	Directions:new Array(),
+	WordsAdded:new Array(),
 	sErrors:'',
 
 	/* PUBLIC METHODS */
@@ -54,6 +55,7 @@ var wordSearch = {
 		this.Words = new Array();
 		this.Directions = new Array();
 		this.sErrors = '';
+		this.WordsAdded = new Array();
 	},
 
 
@@ -80,7 +82,9 @@ var wordSearch = {
 		// ORDER WORDS SO THE LONGEST ONES ARE 
 		// ADDED TO THE GRID FIRST
 		for (var x = 0; x < arrayOfWords.length; x++){
-			this.Words.push(new Word(arrayOfWords[x]));
+			if (arrayOfWords[x].trim().length > 0){
+				this.Words.push(new Word(arrayOfWords[x]));
+			}
 		}
 		this.SortByLength(this.Words);
 
@@ -131,6 +135,7 @@ var wordSearch = {
 			var newPos = newWord.availablePositions[
 								newWord.posIndex];
 
+			this.WordsAdded.push(newWord.word);
 			// LOOP THROUGH THE WORD PLACING IT IN THE GRID
 			for (	var count = 0; 
 					count < newWord.word.length; 
@@ -163,6 +168,8 @@ var wordSearch = {
 						newWord.word.charAt(count);
 				}
 			}
+		} else {
+			this.sErrors += newWord.word + " could not be added.\n";
 		}
 	},
 
