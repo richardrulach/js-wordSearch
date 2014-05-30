@@ -97,10 +97,12 @@ function run(){
 
     DrawGrid();
 
-    context.font = "20px _sans";
+    var fontSize = Math.floor(GRID_SIZE * 0.8);
+    
+    context.font = fontSize + "px _sans";
     context.textBaseline = "middle";
 
-    contextAnswers.font = "20px _sans";
+    contextAnswers.font = fontSize + "px _sans";
     contextAnswers.textBaseline = "middle";
 
     // GENERATE ARRAY OF WORDS TO PUT INTO THE CANVAS
@@ -195,7 +197,11 @@ function run(){
 }
 
 
-
+function gotoPrintOptions(){
+    $('html, body').animate(
+        {scrollTop: $('#printOptions').offset().top}, 
+        400);
+}
 
 function drawMarker(context, x1, y1, x2, y2) {
     context.beginPath();
