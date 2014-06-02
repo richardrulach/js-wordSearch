@@ -49,7 +49,7 @@ function btnAddWords_click(){
 }
 
 function DrawGrid(){
-    for (var i = GRID_SIZE; i < GRID_WIDTH; i+=GRID_SIZE){
+    for (var i = 0; i <= GRID_WIDTH; i+=GRID_SIZE){
         context.moveTo(i,0);
         context.lineTo(i,GRID_HEIGHT);
         context.stroke();
@@ -59,7 +59,7 @@ function DrawGrid(){
         contextAnswers.stroke();
     }
 
-    for (var i = GRID_SIZE; i < GRID_HEIGHT; i+=GRID_SIZE){
+    for (var i = 0; i <= GRID_HEIGHT; i+=GRID_SIZE){
         context.moveTo(0,i);
         context.lineTo(GRID_WIDTH,i);
         context.stroke();
@@ -182,6 +182,9 @@ function run(){
             );
         }
     }
+
+    $('#downloadQuestion').prop('href', canvas.toDataURL('image/png'));
+    $('#downloadAnswer').prop('href', canvasAnswers.toDataURL('image/png'));
 
 
 	$('.loading').hide();
